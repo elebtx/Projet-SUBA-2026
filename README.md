@@ -1,10 +1,12 @@
 **1. Génération des évènements avec MadGraph**
 
-Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus pp->Z->mu+ mu- au format LHE :
-
+Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus $pp->Z->mu+ mu-$ au format LHE :
+```bash
 > generate p p > z > mu+ mu-
 > output ppZmumu
-> launch	
+> launch
+```
+	
 
 Pour modifier les paramètres physique, rendez-vous dans le ficher 'run_card.dat' (il se trouve dans votre dossier ppZmumu crée lors de l'étape précédente). Afin de réaliser les mêmes histogrammes, il vous faut lancer deux runs :
  	- Run 01 : N_events= 10000 et Ebeam1 = Ebeam2 = 6500 GeV (il s'agit du run de référence avec les paramètres par défaut de MadGraph);
