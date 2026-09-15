@@ -1,6 +1,6 @@
 **1. Génération des évènements avec MadGraph**
 
-Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus $pp->Z->mu+ mu-$ au format LHE :
+Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus $p p \rightarrow Z \rightarrow \mu^+ \mu^-$ au format LHE :
 ```bash
 > generate p p > z > mu+ mu-
 > output ppZmumu
