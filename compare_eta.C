@@ -20,7 +20,7 @@ void compare_eta() {
     h7->Scale(1.0 / h7->Integral());
     h13->Scale(1.0 / h13->Integral());
 
-    TCanvas *c1 = new TCanvas("c1", "Comparaison eta muons", 800, 600);
+    TCanvas *c1 = new TCanvas("c1", "Comparaison pseudo-rapidite des muons", 800, 600);
 
     h7->SetTitle("Distribution normalisee de #eta des muons;#eta_{#mu};Fraction d'evenements");
     h7->SetLineWidth(2);
