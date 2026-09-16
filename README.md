@@ -1,6 +1,6 @@
-## 1. Génération des événements avec MadGraph
+## 1. Génération des évènements avec MadGraph
 
-Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus $p p \rightarrow Z \rightarrow \mu^+ \mu^-$ au format LHE :
+Lancez MadGraph depuis votre terminal (version 2.9.27 ici) et exécutez les commandes suivantes pour générer le processus $pp \rightarrow Z \rightarrow \mu^+ \mu^-$ au format LHE :
 
 ```text
 generate p p > z > mu+ mu-
@@ -8,77 +8,106 @@ output ppZmumu
 launch
 ```
 
-Pour modifier les paramètres physiques, rendez-vous dans le fichier `run_card.dat` (situé dans votre dossier `ppZmumu` créé lors de l'étape précédente). Afin de réaliser les mêmes histogrammes, il vous faut lancer deux runs :
+Pour modifier les paramètres physique, rendez-vous dans le ficher `run_card.dat` (il se trouve dans votre dossier `ppZmumu` crée lors de l'étape précédente). Afin de réaliser les mêmes histogrammes, il vous faut lancer deux runs :
+- **Run 01 :** N_events= 10000 et Ebeam1 = Ebeam2 = 6500 GeV (il s'agit du run de référence avec les paramètres par défaut de MadGraph);
+- **Run 02 :** Changez Ebeam2 =  1000 GeV.
 
-- **Run 01** : `N_events = 10000` et `Ebeam1 = Ebeam2 = 6500 GeV` (il s'agit du run de référence avec les paramètres par défaut de MadGraph).
-- **Run 02** : Changez `Ebeam2 = 1000 GeV`.
+Après avoir modifier le fichier `run_card.dat` comme indiqué, il n'est pas utile de relancer MadGraph, il suffit de taper la commande suivante :
 
-Après avoir modifié le fichier `run_card.dat` comme indiqué, il n'est pas utile de relancer MadGraph, il suffit d'exécuter la commande suivante :
-
-```bash
+```text
 bin/generate_events
 ```
 
-Pour chaque run, les événements sont générés sous forme d'archive dans `Events/run_01/unweighted_events.lhe.gz` et `Events/run_02/unweighted_events.lhe.gz`. Décompressez ces fichiers manuellement ou avec la commande :
+Pour chaque run, les événements sont générés sous forme d'archive `Events/run_01/unweighted_events.lhe.gz` et `Events/run_02/unweighted_events.lhe.gz`. Décompressez ces fichiers manuellement ou avec la commande :
 
-```bash
+```text
 gunzip unweighted_events.lhe.gz
 ```
 
 ---
 
-## 2. Conversion du fichier LHE en arbre ROOT
+## 2. Conversion des fichiers LHE en arbres ROOT
 
-Utilisez le script `lhe2root.C` pour transformer les fichiers LHE en arbre ROOT. Depuis votre terminal, lancez ROOT (version 6.40.04) :
+Utilisez le script `lhe2root.C` pour convertir les fichiers LHE en arbre ROOT. Depuis votre terminal, lancez ROOT (version  6.40.04) :
 
 ```bash
 root -l
 ```
 
-Puis exécutez la macro :
+et exécutez la macro `lhe2root.C` :
 
 ```cpp
 .x lhe2root.C("ppZmumu/Events/run_01/unweighted_events.lhe", "nominal.root", -1)
 .x lhe2root.C("ppZmumu/Events/run_02/unweighted_events.lhe", "asymetrique.root", -1)
 ```
 
-> [!NOTE]
-> Assurez-vous que votre fichier `lhe2root.C` se trouve bien dans votre répertoire de travail.
+> **N.B. :** Assurez vous que votre fichier `lhe2root.C` se trouve bien dans votre répertoire de travail.
 
 ---
 
 ## 3. Exécution de l'analyse
 
-Le filtrage cinématique, le calcul des efficacités et les ajustements statistiques sont réalisés par la classe `AnalyseZ`. Dans ROOT, ouvrez le fichier de données et lancez l'analyse :
+Le filtrage cinématique, le calcul des efficacités et les fits sont réalisés par la classe `Analyze`. Dans ROOT, ouvrez le fichier de données et lancez l'analyse :
 
 ```cpp
 TFile f("nominal.root");
-Events->Process("AnalyseZ.C+");
+Events->Process("Analyze.C");
 ```
 
-> [!NOTE]
-> Avant de commencer cette étape, assurez-vous que vos fichiers `nominal.root`, `asymetrique.root`, `AnalyseZ.C` et `AnalyseZ.h` soient présents dans votre répertoire de travail.
+> **N.B. :** Avant de commencer cette étape, assurez vous que vos fichiers `nominal.root`, `asymetrique.root`, `AnalyseZ.C` et `AnalyseZ.h` soient dans votre répertoire de travail.*
 
 L'exécution de cette commande affiche dans le terminal :
-- Le nombre total d'événements ($N_{\text{tot}}$) ;
-- Le nombre d'événements retenus après la sélection ($N_{\text{pass}}$) ;
-- L'efficacité globale ($\varepsilon = N_{\text{pass}} / N_{\text{tot}}$) ;
-- L'incertitude binomiale ;
-- L'incertitude de Clopper-Pearson.
+- le nombre d'évènements (N_tot); 
+- le nombre d'évènements retenus après la sélection (N_pass);
+- l'efficacité globale (eps = N_pass/N_tot);
+- l'incertitude binomiale;
+- l'incertitude de Clopper-Pearson.
 
 Elle génère également les figures suivantes :
-- L'efficacité différentielle ajustée en fonction de la pseudo-rapidité $\eta$ ;
-- L'ajustement de la masse invariante $m_{\mu\mu}$ par une fonction de Breit-Wigner relativiste.
+- l'efficacité différentielle en fonction de la pseudo-rapidité \eta;
+- le fit de la masse invariante $m_{\mu\mu}$ par une fonction de Breit-Wigner relativiste.
+- autres figures à écrire
 
-Afin de produire les différents histogrammes réalisés pour différentes valeurs de l'impulsion transverse $p_T$, il vous faudra modifier la sélection des événements ligne 81 du fichier `AnalyseZ.C` :
+Elle crée également le fichier `eta_muon.root`. 
 
+> **N.B. :** Pour éviter d'écraser ce fichier lors de l'analyse du Run 02, il est préférable de le renommer :
 ```cpp
-if (muons_event[i].Pt() > 25.0 && std::abs(muons_event[i].Eta()) < 2.4)
+gSystem->Rename("eta_muon.root","eta_muon_nominal.root");
 ```
 
-Pour réaliser cette analyse avec les données du Run 02, dans ROOT, ouvrez le fichier correspondant et lancez l'analyse :
+Pour réaliser cette même analyse avec les données du Run 02, il suffit de reproduire ces mêmes étapes avec le fichier `asymetrique.root`
+
+
+---
+
+<!--
+4. Comparaison des distributions en eta
+
+La fonction 'compare_eta' contenue dans Analyze.C permet de comparer les deux distributions normalisées. Dans une nouvelle session ROOT :
+
+[] .L Analyze.C
+[] compare_eta("eta_muon_nominal.root","eta_muon_asym.root");
+
+La figure obtenue compare la distribution de eta des muons pour les deux configurations. Les histogrammes sont normalisés : l'axe vertical représente donc la fraction d'évènements.
+
+La figure est enregistrée sous :
+    compare_eta.png
+
+
+
+---
+
+## 5. Section efficace en fonction de l'énergie
+
+La fonction `cross_section` contenue dans `Analyze.C` permet de tracer la section efficace en fonction de l'énergie de la collision.
+Pour cela, dans ROOT :
 
 ```cpp
-TFile f("asymetrique.root");
-Events->Process("AnalyseZ.C+");
+.L Analyze.C
+cross_section();
 ```
+
+La figure est enregistrée sous :
+- `cross_section.png`
+
+-->
