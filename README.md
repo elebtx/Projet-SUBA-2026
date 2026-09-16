@@ -13,7 +13,9 @@ Pour modifier les paramètres physique, rendez-vous dans le ficher `run_card.dat
 - **Run 01 :** N_events= 10000 et Ebeam1 = Ebeam2 = 6500 GeV (il s'agit du run de référence avec les paramètres par défaut de MadGraph);
 - **Run 02 :** Changez Ebeam2 =  1000 GeV.
 
-Après avoir modifier le fichier `run_card.dat` comme indiqué, il n'est pas utile de relancer MadGraph, il suffit de taper la commande suivante :
+> Note : D'autres Run ont également été réalisés pour ce projet, le Run 02 est donné ici à titre d'exemple.
+
+Après avoir modifié et enregistré le fichier `run_card.dat` comme indiqué, il n'est pas utile de relancer MadGraph, il suffit de taper la commande suivante :
 
 ```text
 bin/generate_events
