@@ -68,8 +68,8 @@ L'exécution de cette commande affiche dans le terminal :
 
 Elle génère également les figures suivantes :
 - l'efficacité différentielle en fonction de la pseudo-rapidité \eta;
-- le fit de la masse invariante $m_{\mu\mu}$ par une fonction de Breit-Wigner relativiste.
-- autres figures à écrire
+- le fit de la masse invariante $m_{\mu\mu}$ par une fonction de Breit-Wigner relativiste;
+- l'efficacite en fonction de l'impulsion transverse.
 
 Elle crée également le fichier `eta_muon.root`. 
 
@@ -83,34 +83,20 @@ Pour réaliser cette même analyse avec les données du Run 02, il suffit de rep
 
 ---
 
-<!--
-4. Comparaison des distributions en eta
 
-La fonction 'compare_eta' contenue dans Analyze.C permet de comparer les deux distributions normalisées. Dans une nouvelle session ROOT :
+## 4. Macros supplémentaires
 
-[] .L Analyze.C
-[] compare_eta("eta_muon_nominal.root","eta_muon_asym.root");
+La macro `compare_eta.C` permet de comparer la distribution de la pseudo rapidité des muons pour dans le cas d'une collision symétrique et d'une asymétrique. Pour exécuter cette fonction, dans ROOT :
 
-La figure obtenue compare la distribution de eta des muons pour les deux configurations. Les histogrammes sont normalisés : l'axe vertical représente donc la fraction d'évènements.
-
-La figure est enregistrée sous :
-    compare_eta.png
+```cpp
+.L Analyze.C
+compare_eta("eta_muon_nominal.root","eta_muon_asym.root");
+```
 
 
-
----
-
-## 5. Section efficace en fonction de l'énergie
-
-La fonction `cross_section` contenue dans `Analyze.C` permet de tracer la section efficace en fonction de l'énergie de la collision.
-Pour cela, dans ROOT :
+La macro `cross_section.C` permet de tracer la section efficace en fonction de l'énergie de la collision. Pour exécuter cette fonction, dans ROOT :
 
 ```cpp
 .L Analyze.C
 cross_section();
 ```
-
-La figure est enregistrée sous :
-- `cross_section.png`
-
--->
