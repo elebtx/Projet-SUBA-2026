@@ -107,14 +107,15 @@ bool Analyze::Process(Long64_t entry) {
       h_eta_tot->Fill(eta);
 
       // Sélections cinématiques :
-      if (pt > 25.0 && std::abs(eta) < 2.4) {
-         pass25 = true;
-         h_eta_pass->Fill(eta);
+      if (pt > 25.0) {pass25 = true;}
+
+      if (pass25 && std::abs(eta) < 2.4){
+          h_eta_pass->Fill(eta);
       }
 
-      if (pt > 30.0 && std::abs(eta) < 2.4) {
-         pass30 = true;
-      }
+      if (pt > 30.0) {pass30 = true;}
+
+
    }
 
    // Remplissage des histogrammes 
@@ -247,7 +248,7 @@ void Analyze::Terminate() {
 
    // Comparaison des seuils 25 et 30 GeV.
    TGraphAsymmErrors *gEff30 =
-      new TGraphAsymmErrors(hPass30, hTotal, "cl=0.683 cp");
+      new TGraphAsymmErrors(hPass30, hTotal, "cp");
    gEff30->SetMarkerStyle(21);
    gEff30->SetMarkerColor(kRed+1);
    gEff30->SetLineColor(kRed+1);
